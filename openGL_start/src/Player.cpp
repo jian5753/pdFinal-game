@@ -13,7 +13,7 @@ Player::Player(Texture* texture, Vector2u imageCnt, float switchtime, bool backF
 	faceRight = true; 
 	body.setPosition(500.0f, 280.0f);
 	body.setSize(Vector2f(120.0f, 150.0f));
-	body.setOrigin(50.0f, 50.0f);
+	body.setOrigin(body.getSize() / 2.0f);
 	body.setTexture(texture);
 	
 }

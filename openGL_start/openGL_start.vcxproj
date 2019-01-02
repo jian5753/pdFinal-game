@@ -135,13 +135,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Platform.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="myHeaders\Collider.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="myHeaders\Animation.h" />
     <ClInclude Include="myHeaders\Player.h" />
+    <ClInclude Include="myHeaders\Platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

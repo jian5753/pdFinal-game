@@ -3,35 +3,55 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <Player.h>
+#include <Collider.h>
+#include <Platform.h>
 using namespace sf;
 
+static const float VIEW_HEIGHT = 300.0f;
+void ReSizeView(const RenderWindow& window, View& view)
+{
+	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
+	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
+}
 
 int main(void)
 {
+	/*screen display shits*/
 	RenderWindow window(VideoMode(1080, 480), "sfml window", Style::Close | Style::Resize);
-	RectangleShape julian(Vector2f(120.0f,150.0f));
-	julian.setOrigin(50.0f, 50.0f);
-	julian.setPosition(106.0f, 106.0f);
+	View view(Vector2f(0.0f, 0.0f), Vector2f(600.0f, 300.0f));
 
 	/*declare texture and load file*/
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
 	Texture firzenTexture;
 	firzenTexture.loadFromFile("fighters/firzen/firzen.png");
 
-	/*animation declare*/
+	/*create player firzen*/
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 100.0f);
 	float deltaTime = 0.0f;
+
+	/*create some platform to test*/
+	Platform platform1(NULL, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(0.0f, 50.0f));
+
+	/*timer to keep animation update*/
 	Clock clock;
 
 	while (window.isOpen()) {	 
 
+		/*keep player, firzen update*/
 		deltaTime = clock.restart().asSeconds();
 		firzen.Update(deltaTime);
-
-		/*animation activate*/
-
+	
+		platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 0.0f);
+		
+		/*set some window shit including view*/
+		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
+		//window.setView(view);
+
+		/*draw the shit on the window*/
 		firzen.Draw(window);
+		platform1.Draw(window);
+
 		window.display();
 
 		Event evnt;
@@ -44,9 +64,14 @@ int main(void)
 				break;
 
 			case Event::Resized:
+				ReSizeView(window, view);
 				break;
 			}
 	
+		}
+
+		if (Mouse::isButtonPressed(Mouse::Left)) {
+			std::cout<<"hello\n";
 		}
 	}
 }

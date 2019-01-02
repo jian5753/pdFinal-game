@@ -1,2 +1,6 @@
 ﻿  Player.cpp
-  openGL_start.vcxproj -> C:\projects\openGL_start\Debug\openGL_start.exe
+  main.cpp
+c:\projects\opengl_start\opengl_start\src\main.cpp(54): error C2065: 'platform2': 未宣告的識別項
+c:\projects\opengl_start\opengl_start\src\main.cpp(75): error C2065: 'cout': 未宣告的識別項
+c:\projects\opengl_start\opengl_start\src\main.cpp(76): error C2059: 語法錯誤: '}'
+  正在產生程式碼...

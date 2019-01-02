@@ -50,7 +50,7 @@ void Animation::update(int row, float deltaTime, bool faceRight)
 						backing = true;
 						heading = false;
 					}
-				}
+				}	
 				else if (backing) {
 					currentImg.x--;
 					if (currentImg.x < 0 or currentImg.x > imageCnt.x)
