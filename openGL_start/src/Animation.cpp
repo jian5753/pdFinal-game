@@ -39,7 +39,6 @@ void Animation::update(int row, float deltaTime, bool faceRight)
 		if (totalTime >= switchTime)
 		{
 			totalTime -= switchTime;
-			std::cout << row << "switch motherfucker \n";
 			if (backForthCycle) {
 				if (heading)
 				{

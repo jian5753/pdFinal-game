@@ -8,6 +8,7 @@ public:
 	~Platform();
 
 	void Draw(sf::RenderWindow& window);
+	sf::Vector2f getPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
 
 private:
