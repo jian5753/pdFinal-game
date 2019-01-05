@@ -67,7 +67,7 @@ int main(void)
 		deltaTime = clock.restart().asSeconds();
 		if (deltaTime >= 1.0f / 20.0f)
 			deltaTime = 1.0f / 20.0f;
-		firzen.Update(deltaTime);
+		firzen.Update(deltaTime, windowBounds);
 
 		/*collision*/
 		sf::Vector2f direction;
@@ -83,7 +83,7 @@ int main(void)
 		/*set some window shit including view*/
 		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
-		window.setView(view);
+		//window.setView(view);
 
 		/*draw the shit on the window*/
 		sf::Sprite background(backgroundTexture);

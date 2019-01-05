@@ -105,17 +105,12 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		
 	}
 	/*boundaries setting*/
-	if (body.getPosition().x < windowBounds.left) {
-		movement.x = windowBounds.left - body.getPosition().x;
+	printf("%f\n", body.getPosition().x);
+	if (body.getPosition().x < windowBounds.left && velocity.x < 0.0f) {
+		velocity.x -= velocity.x;
 	}
-	if (body.getPosition().x > windowBounds.left + windowBounds.width) {
-		movement.x = (windowBounds.left + windowBounds.width) - body.getPosition().x;
-	}
-	if (body.getPosition().y < windowBounds.top) {
-		movement.y = windowBounds.top - body.getPosition().y;
-	}
-	if (body.getPosition().y > windowBounds.top + windowBounds.height) {
-		movement.y = (windowBounds.top + windowBounds.height) - body.getPosition().y;
+	if (body.getPosition().x > windowBounds.left + windowBounds.width && velocity.x > 0.0f) {
+		velocity.x -= velocity.x;
 	}
 
 	animation.update(row, deltaTime, faceRight);
