@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <Player.h>
@@ -14,6 +12,7 @@ void ReSizeView(const RenderWindow& window, View& view)
 	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
 	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
 }
+
 
 int main(void)
 {
