@@ -8,8 +8,8 @@ class Player
 public:
 	Player(Texture* texture, Vector2u imageCnt, float switchtime, bool backForthCycle, float speed);
 	~Player();
-
-	void Update(float deltaTime);
+	
+	void Update(float deltaTime, FloatRect windowBounds);
 	void Draw(RenderWindow& window);
 	
 	Vector2f getPosition() { return body.getPosition(); }

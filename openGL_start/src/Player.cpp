@@ -15,7 +15,6 @@ Player::Player(Texture* texture, Vector2u imageCnt, float switchtime, bool backF
 	body.setSize(Vector2f(120.0f, 150.0f));
 	body.setOrigin(body.getSize() / 2.0f);
 	body.setTexture(texture);
-	
 }
 
 
@@ -28,7 +27,7 @@ void Player::Draw(RenderWindow& window)
 	window.draw(body);
 }
 
-void Player::Update(float deltaTime)
+void Player::Update(float deltaTime, FloatRect windowBounds)
 {
 	Vector2f movement(0.0f, 0.0f);
 	bool moveOrIdle = true;
@@ -84,11 +83,21 @@ void Player::Update(float deltaTime)
 		}
 		
 	}
+	/*boundaries setting*/
+	if (body.getPosition().x < windowBounds.left) {
+		movement.x = windowBounds.left - body.getPosition().x;
+	}
+	if (body.getPosition().x > windowBounds.left + windowBounds.width) {
+		movement.x = (windowBounds.left + windowBounds.width) - body.getPosition().x;
+	}
+	if (body.getPosition().y < windowBounds.top) {
+		movement.y = windowBounds.top - body.getPosition().y;
+	}
+	if (body.getPosition().y > windowBounds.top + windowBounds.height) {
+		movement.y = (windowBounds.top + windowBounds.height) - body.getPosition().y;
+	}
 
 	animation.update(row, deltaTime, faceRight);
 	body.setTextureRect(animation.uvRect);
 	body.move(movement);
-	
-
-	
 }

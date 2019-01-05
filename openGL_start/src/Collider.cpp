@@ -30,9 +30,10 @@ bool Collider::CheckCollision(Collider* other, float push)
 	/*some if else*/
 	if (intersectX < 0.0f and intersectY < 0.0f)
 	{
-		push = std::min(std::max(push, 0.0f), 1.0f);
+		push = std::min(std::max(push, 0.0f), 1.0f);   //
 
-		if (intersectX > intersectY)
+		//choose smaller to push
+		if (intersectX > intersectY) // abs(intersectX) < abs(intersectY) cuz using the negative #
 		{
 			if (deltaX > 0.0f)
 			{	

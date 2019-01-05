@@ -4,7 +4,7 @@
 class Collider
 {
 public:
-	Collider(sf::RectangleShape& body);
+	Collider(sf::RectangleShape& body);   //body in player.h in order to move getting its ref. is needed
 	~Collider();
 
 	void Move(float dx, float dy) { body.move(dx, dy); }

@@ -7,7 +7,7 @@
 #include <Platform.h>
 using namespace sf;
 
-static const float VIEW_HEIGHT = 300.0f;
+static const float VIEW_HEIGHT = 360.0f;
 void ReSizeView(const RenderWindow& window, View& view)
 {
 	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
@@ -17,13 +17,19 @@ void ReSizeView(const RenderWindow& window, View& view)
 int main(void)
 {
 	/*screen display shits*/
-	RenderWindow window(VideoMode(1080, 480), "sfml window", Style::Close | Style::Resize);
-	View view(Vector2f(0.0f, 0.0f), Vector2f(600.0f, 300.0f));
+	RenderWindow window(VideoMode(1080, 720), "Doodle", Style::Close | Style::Resize);
+	sf::FloatRect windowBounds(sf::Vector2f(0.f, 0.f), window.getDefaultView().getSize());
+	View view(Vector2f(0.0f, 0.0f), Vector2f(720.0f, 360.0f));
 
 	/*declare texture and load file*/
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
 	Texture firzenTexture;
 	firzenTexture.loadFromFile("fighters/firzen/firzen.png");
+
+	/*background image*/
+	Texture backgroundTexture;
+	backgroundTexture.loadFromFile("fighters/background/bg.jpg");
+
 
 	/*create player firzen*/
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 100.0f);
@@ -36,28 +42,9 @@ int main(void)
 	Clock clock;
 
 	while (window.isOpen()) {	 
-
-		/*keep player, firzen update*/
-		deltaTime = clock.restart().asSeconds();
-		firzen.Update(deltaTime);
-	
-		platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 0.0f);
-		
-		/*set some window shit including view*/
-		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
-		window.clear(Color(150,150,150));
-		//window.setView(view);
-
-		/*draw the shit on the window*/
-		firzen.Draw(window);
-		platform1.Draw(window);
-
-		window.display();
-
 		Event evnt;
-
 		while (window.pollEvent(evnt)) {
-			switch (evnt.type) 
+			switch (evnt.type)
 			{
 			case Event::Closed:
 				window.close();
@@ -67,11 +54,25 @@ int main(void)
 				ReSizeView(window, view);
 				break;
 			}
-	
 		}
 
-		if (Mouse::isButtonPressed(Mouse::Left)) {
-			std::cout<<"hello\n";
-		}
+		/*keep player, firzen update*/
+		deltaTime = clock.restart().asSeconds();
+		firzen.Update(deltaTime, windowBounds);
+	
+		platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 0.0f);
+		
+		/*set some window shit including view*/
+		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
+		window.clear(Color(150,150,150));
+		//window.setView(view);
+
+		/*draw the shit on the window*/
+		sf::Sprite background(backgroundTexture);
+		window.draw(background);
+		firzen.Draw(window);
+		platform1.Draw(window);
+
+		window.display();
 	}
 }
