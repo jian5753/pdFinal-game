@@ -44,13 +44,17 @@ int main(void)
 
 	/*create some platform to test*/
 	/* to Zi Shian
-	to creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
+	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
 	and you'll need two sf::vector2f to determin the size and position(second).
-	after finishing creating platform, remember to adjust the code in the "collision section" and "draw section" 
-	so that the new platforms will work correctly. */
+
+	After finishing creating platform, remember to adjust the code in the "collision section" and "draw section" 
+	so that the new platforms will work correctly.
+
+	Also, there's a function of platform objects "setVerticalVelocity" (put in platgorm.h)
+	if you wanna make some platforms to fall.
+	*/ 
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
 	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 700.0f));
-
 	
 
 	/*timer to keep animation update*/
@@ -86,7 +90,9 @@ int main(void)
 			deltaTime = 1.0f / 20.0f;
 		firzen.Update(deltaTime, windowBounds);
 
-		/*check collision collision*/
+		/*make platforms drop*/
+
+		/*collision*/
 		sf::Vector2f direction;
 		if (platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
 			firzen.OnCollision(direction);
@@ -100,12 +106,14 @@ int main(void)
 		{
 			firzen.SetVerticalVelocity(-sqrt(2.0f * 981.0f * PLAYER_JUMP));
 		}
+
+
 		/*set some window shit including view*/
 		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
 		//window.setView(view);
 
-		/*draw the platform and players on the window*/
+		/*draw*/
 		sf::Sprite background(backgroundTexture);
 		window.draw(background);
 		firzen.Draw(window);
