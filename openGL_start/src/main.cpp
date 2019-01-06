@@ -6,6 +6,13 @@
 using namespace sf;
 
 static const float VIEW_HEIGHT = 300.0f;
+const float WINDOW_WIDTH = 1080.0f;
+const float WINDOW_HEIGHT = 800.0f;
+const float PLATFORM_WIDTH = 150.0f;
+const float PLATFORM_HEIGHT = 20.0f;
+const float PLAYER_WIDTH = 120.0f;
+const float PLAYER_HEIGHT = 150.0f;
+const float PLAYER_JUMP = PLAYER_HEIGHT;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -17,9 +24,9 @@ void ReSizeView(const RenderWindow& window, View& view)
 int main(void)
 {
 	/*screen display shits*/
-	RenderWindow window(VideoMode(1080, 720), "Doodle", Style::Close | Style::Resize);
+	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Doodle", Style::Close | Style::Resize);
 	sf::FloatRect windowBounds(sf::Vector2f(0.f, 0.f), window.getDefaultView().getSize());
-	View view(Vector2f(0.0f, 0.0f), Vector2f(720.0f, 360.0f));
+	View view(Vector2f(0.0f, 0.0f), Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT));
 
 	/*declare texture and load file*/
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
@@ -36,15 +43,18 @@ int main(void)
 	float deltaTime = 0.0f;
 
 	/*create some platform to test*/
-	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 300.0f));
-	Platform platform2(NULL, sf::Vector2f(100.0f, 50.0f), sf::Vector2f(200.0f, 150.0f));
+	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
+	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 700.0f));
 
 	/*timer to keep animation update*/
 	Clock clock;
 	float opTime = 0.0f;
 	const float OP_FREQ = 1.0f;
 
-	while (window.isOpen()) {	 
+	/*variables to check collision between player and platforms*/
+	float deltaX, deltaY, intersectionX, intersectionY;
+
+	while (window.isOpen()) {
 		Event evnt;
 		while (window.pollEvent(evnt)) {
 			switch (evnt.type)
@@ -74,14 +84,17 @@ int main(void)
 		if (platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
 			firzen.OnCollision(direction);
 		}
-		
-		if (platform2.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
+
+		deltaX = abs(platform2.getPosition().x - firzen.getPosition().x);
+		deltaY = abs(platform2.getPosition().y - firzen.getPosition().y);
+		intersectionX = deltaX - (PLAYER_WIDTH / 2 + PLATFORM_WIDTH / 2);
+		intersectionY = deltaY - (PLAYER_HEIGHT / 2 + PLATFORM_HEIGHT / 2);
+		if (intersectionY <= 0 && intersectionX <= 0)
 		{
-			firzen.OnCollision(direction);
+			firzen.SetVerticalVelocity(-sqrt(2.0f * 981.0f * PLAYER_JUMP));
 		}
-		
 		/*set some window shit including view*/
-		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
+		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
 		//window.setView(view);
 
