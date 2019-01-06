@@ -45,12 +45,12 @@ int main(void)
 	/*create some platform to test*/
 	/* to Zi Shian
 	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
-	and you'll need two sf::vector2f to determin the size and position(second).
+	and you'll need two sf::vector2f to determin the size (first) and position(second).
 
 	After finishing creating platform, remember to adjust the code in the "collision section" and "draw section" 
 	so that the new platforms will work correctly.
 
-	Also, there's a function of platform objects "setVerticalVelocity" (put in platgorm.h)
+	Also, there's a function of platform objects "setVerticalVelocity" (i wrote it in the platform.h)
 	if you wanna make some platforms to fall.
 	*/ 
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
