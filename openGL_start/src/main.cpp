@@ -43,8 +43,13 @@ int main(void)
 	float deltaTime = 0.0f;
 
 	/*create some platform to test*/
+	/* to Zi Shian
+	to creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
+	and you'll need two sf::vector2f to determin the size and position(second)*/
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
 	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 700.0f));
+
+	
 
 	/*timer to keep animation update*/
 	Clock clock;
