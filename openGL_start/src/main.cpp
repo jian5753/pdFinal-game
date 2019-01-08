@@ -11,7 +11,7 @@ const unsigned int WINDOW_HEIGHT = 800;
 const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
-const float PLAYER_HEIGHT = 150.0f;
+const float PLAYER_HEIGHT = 160.0f;
 const float PLAYER_JUMP = PLAYER_HEIGHT;
 
 void ReSizeView(const RenderWindow& window, View& view)
@@ -19,6 +19,10 @@ void ReSizeView(const RenderWindow& window, View& view)
 	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
 	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
 }
+
+const int platCnt = 13;
+/*create a shit ton of platforms*/
+
 
 
 int main(void)
@@ -54,8 +58,31 @@ int main(void)
 	if you wanna make some platforms to fall.
 	*/ 
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
-	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 600.0f));
-	
+
+	/*create shit tons of platforms*/
+	Platform** plats = new Platform*[platCnt];
+	float positionX = 0.0f, positionY = 0.0f;
+	float lastPositionX = WINDOW_WIDTH / 2, lastPositionY = WINDOW_HEIGHT;
+	for (int i = 0; i < platCnt; i++)
+	{
+		if (rand() % 2000 <= 1000)
+		{
+			positionX = (float)WINDOW_WIDTH / 2 + rand() % 300;
+			std::cout << "right\n";
+		}
+		else
+		{
+			positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
+			std::cout << "left\n";
+		}
+		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.8);
+		plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
+		lastPositionX = positionX;
+		lastPositionY = positionY;
+	}
+
+
+
 
 	/*timer to keep animation update*/
 	Clock clock;
@@ -97,8 +124,10 @@ int main(void)
 		if (platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
 			firzen.OnCollision(direction);
 		}
-		if (platform2.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
-			firzen.OnCollision(direction);
+		for (int i = 0; i < platCnt; i++)
+		{
+			if(plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
+				firzen.OnCollision(direction);
 		}
 		/*
 		deltaX = abs(platform2.getPosition().x - firzen.getPosition().x);
@@ -109,7 +138,30 @@ int main(void)
 		{
 			firzen.SetVerticalVelocity(-sqrt(2.0f * 981.0f * PLAYER_JUMP));
 		}*/
-
+		
+		/*make platforms fall*/
+		for (int i = 0; i < platCnt; i++)
+		{
+			plats[i]->setVerticalVelocity(0.4f);
+			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
+				std::printf("block # %i baba~\n",i);
+				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
+				
+				delete plats[i];
+				if (rand() % 2000 <= 1000)
+				{
+					positionX = (float)WINDOW_WIDTH / 2 + rand() % 300;
+				}
+				else
+				{
+					positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
+				}
+				positionY = rand() % 10 - (float)WINDOW_HEIGHT;
+				std::printf("new position (%f,%f)", positionX, positionY);
+				//system("pause");
+				plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
+			}
+		}
 
 		/*set some window shit including view*/
 		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
@@ -119,10 +171,11 @@ int main(void)
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
 		window.draw(background);
-		firzen.Draw(window);
+		
 		platform1.Draw(window);
-		platform2.Draw(window);
-
+		for (int i = 0; i < platCnt; i++)
+			plats[i]->Draw(window);
+		firzen.Draw(window);
 		/*some output*/
 		opTime += deltaTime;
 		if (opTime >= OP_FREQ )
