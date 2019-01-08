@@ -125,10 +125,11 @@ int main(void)
 
 		/*some output*/
 		opTime += deltaTime;
+		// positive means upward
 		if (opTime >= OP_FREQ )
 		{
 			opTime = 0.0f;
-			std::printf("velocity :(%f, -%f)\n", firzen.GetVelocity().x, firzen.GetVelocity().y);
+			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
 
 
