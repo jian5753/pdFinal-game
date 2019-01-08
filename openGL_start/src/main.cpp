@@ -70,6 +70,45 @@ int main(void)
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f,150.0f);
 	float deltaTime = 0.0f;
 
+	//ready to play
+
+	
+	Texture startTexture;
+	startTexture.loadFromFile("fighters/start/startDark.png");
+
+	Platform startImg(&startTexture, sf::Vector2f(364.0f, 61.0f), sf::Vector2f((WINDOW_WIDTH/2), 550.0f));
+
+	//ready to play
+
+	while (true) {
+		Event evnt;
+		while (window.pollEvent(evnt)) {
+			switch (evnt.type)
+			{
+			case Event::Closed:
+				window.close();
+				break;
+			case Event::Resized:
+				ReSizeView(window, view);
+				break;
+			}
+		}
+
+
+//		std::printf("press space to start!");
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			break;
+		}
+		/*draw*/
+		sf::Sprite background(backgroundTexture);
+		window.draw(background);
+		startImg.Draw(window);
+		window.display();
+	}
+
+
+
 	/*create some platform to test*/
 	/* to Zi Shian
 	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
@@ -198,7 +237,8 @@ int main(void)
 		}
 		// set the string to display
 		std::ostringstream oss;
-		oss << firzen.GetVelocity().x;
+		float score = ((WINDOW_HEIGHT - firzen.getPosition().y));
+		oss << static_cast<int>(score);
 		std::string str = oss.str();
 		text.setString(str);
 		window.draw(text);
