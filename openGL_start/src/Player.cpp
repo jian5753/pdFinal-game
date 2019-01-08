@@ -58,15 +58,6 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 	{
 		velocity.x = 0;
 	}
-	/* jump not up and down
-	if (Keyboard::isKeyPressed(Keyboard::S))
-		//move down
-		movement.y += speed * deltaTime;
-
-	if (Keyboard::isKeyPressed(Keyboard::W))
-		//move right
-		movement.y -= speed * deltaTime;
-	*/
 
 	if (Keyboard::isKeyPressed(Keyboard::G))
 	{
@@ -74,12 +65,12 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		moveOrIdle = false;
 		row = 2;
 	}
-
+	/*
 	if (sf::Keyboard::isKeyPressed(Keyboard::W) && canJump)
 	{
 		canJump = false;
 		velocity.y = -sqrt(2.0f * 981.0f * jumpHeight);
-	}
+	}*/
 
 	velocity.y += 981.0f * deltaTime;
 
@@ -123,20 +114,20 @@ void Player::OnCollision(sf::Vector2f direction)
 {
 	if (direction.x < 0.0f)
 	{
-		velocity.x = 0.0f;
+		//velocity.x = 0.0f;
 	}
 	else if (direction.x > 0.0f)
 	{
-		velocity.x = 0.0f;
+		//velocity.x = 0.0f;
 	}
 
 	if (direction.y > 0.0f)
 	{
-		velocity.y = 0.0f;
+		//velocity.y = 0.0f;
 	}
-	else if (direction.y < 0.0f)
+	else if (direction.y < 0.0f and velocity.y>=0)
 	{
-		velocity.y = 0.0f;
+		velocity.y = -sqrt(2.0f * 981.0f * jumpHeight);
 		canJump = true;
 	}
 }

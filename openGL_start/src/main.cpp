@@ -6,8 +6,8 @@
 using namespace sf;
 
 static const float VIEW_HEIGHT = 300.0f;
-const float WINDOW_WIDTH = 1080.0f;
-const float WINDOW_HEIGHT = 800.0f;
+const unsigned int WINDOW_WIDTH = 1080;
+const unsigned int WINDOW_HEIGHT = 800;
 const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
@@ -54,7 +54,7 @@ int main(void)
 	if you wanna make some platforms to fall.
 	*/ 
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
-	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 700.0f));
+	Platform platform2(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(200.0f, 600.0f));
 	
 
 	/*timer to keep animation update*/
@@ -63,7 +63,7 @@ int main(void)
 	const float OP_FREQ = 1.0f;
 
 	/*variables to check collision between player and platforms*/
-	float deltaX, deltaY, intersectionX, intersectionY;
+//	float deltaX, deltaY, intersectionX, intersectionY;
 
 	while (window.isOpen()) {
 		Event evnt;
@@ -97,7 +97,10 @@ int main(void)
 		if (platform1.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
 			firzen.OnCollision(direction);
 		}
-
+		if (platform2.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction)) {
+			firzen.OnCollision(direction);
+		}
+		/*
 		deltaX = abs(platform2.getPosition().x - firzen.getPosition().x);
 		deltaY = abs(platform2.getPosition().y - firzen.getPosition().y);
 		intersectionX = deltaX - (PLAYER_WIDTH / 2 + PLATFORM_WIDTH / 2);
@@ -105,7 +108,7 @@ int main(void)
 		if (intersectionY <= 0 && intersectionX <= 0)
 		{
 			firzen.SetVerticalVelocity(-sqrt(2.0f * 981.0f * PLAYER_JUMP));
-		}
+		}*/
 
 
 		/*set some window shit including view*/

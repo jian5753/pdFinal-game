@@ -9,6 +9,10 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 	sf::Vector2f getPosition() { return body.getPosition(); }
+	void setVerticalVelocity(float f)
+	{
+		body.move(sf::Vector2f(0.0f, f));
+	}
 	Collider GetCollider() { return Collider(body); }
 
 private:

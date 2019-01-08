@@ -45,16 +45,16 @@ bool Collider::CheckCollision(Collider* other, float push, sf::Vector2f& directi
 			if (deltaX > 0.0f)
 			{	
 				//std::cout << "git pushed from right \n";
-				Move(intersectX * (1.0f - push), 0.0f);
-				other->Move(-intersectX * push, 0.0f);
+				//Move(intersectX * (1.0f - push), 0.0f);
+				//other->Move(-intersectX * push, 0.0f);
 				direction.x = 1.0f;
 				
 			}
 			else
 			{
 				//std::cout << "git pushed from left \n";
-				Move(-intersectX * (1.0f - push), 0.0f);
-				other->Move(intersectX * push, 0.0f);
+				//Move(-intersectX * (1.0f - push), 0.0f);
+				//other->Move(intersectX * push, 0.0f);
 				direction.x = -1.0f;
 			}
 		}
@@ -64,15 +64,16 @@ bool Collider::CheckCollision(Collider* other, float push, sf::Vector2f& directi
 			if (deltaY > 0.0f)
 			{
 				//std::cout << "git pushed from bottom \n";
-				Move(0.0f, intersectY * (1.0f - push));
-				other->Move(0.0f, -intersectY * push);
+				//Move(0.0f, intersectY * (1.0f - push));
+				//other->Move(0.0f, -intersectY * push);
 				direction.y = 1.0f;
 			}
-			else
+			else 
 			{	
+				if(abs(deltaY) > otherHalfSize.y+thisrHalfSize.y*0)
 				//std::cout << "git pushed from  top \n";
-				Move(0.0f,-intersectY * (1.0f - push));
-				other->Move(0.0f, intersectY * push);
+				//Move(0.0f,-intersectY * (1.0f - push));
+				//other->Move(0.0f, intersectY * push);
 				direction.y = -1.0f;
 			}
 		}
