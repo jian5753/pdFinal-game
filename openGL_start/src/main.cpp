@@ -15,6 +15,7 @@ const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
 const float PLAYER_JUMP = PLAYER_HEIGHT;
+const float PLATFORM_FALL_SPEED = 0.3f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -147,6 +148,7 @@ int main(void)
 	/*timer to keep animation update*/
 	Clock clock;
 	float opTime = 0.0f;
+	float totalTime = 0.0f; // to record total time passed in the game
 	const float OP_FREQ = 1.0f;
 
 	/*variables to check collision between player and platforms*/
@@ -193,7 +195,7 @@ int main(void)
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
-			plats[i]->setVerticalVelocity(0.3f);
+			plats[i]->setVerticalVelocity(PLATFORM_FALL_SPEED);
 			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
 				std::printf("block # %i baba~\n",i);
 				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
@@ -227,22 +229,25 @@ int main(void)
 		for (int i = 0; i < platCnt; i++)
 			plats[i]->Draw(window);
 		firzen.Draw(window);
-		/*some output*/
-		opTime += deltaTime;
-		// positive means upward
-		if (opTime >= OP_FREQ )
-		{
-			opTime = 0.0f;
-			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
-		}
-		// set the string to display
+		
+		/*set the string to display*/
 		std::ostringstream oss;
-		float score = ((WINDOW_HEIGHT - firzen.getPosition().y));
+		totalTime += deltaTime;
+		float score = ((WINDOW_HEIGHT - firzen.getPosition().y) + totalTime * PLATFORM_FALL_SPEED * 100);
 		oss << static_cast<int>(score);
 		std::string str = oss.str();
 		text.setString(str);
 		window.draw(text);
 		window.draw(word);
 		window.display();
+
+		/*some output*/
+		opTime += deltaTime;
+		// positive means upward
+		if (opTime >= OP_FREQ)
+		{
+			opTime = 0.0f;
+			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
+		}
 	}
 }
