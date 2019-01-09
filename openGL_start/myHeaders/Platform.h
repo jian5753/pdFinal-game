@@ -1,3 +1,5 @@
+//	pf.h
+
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <Collider.h>
@@ -13,6 +15,10 @@ public:
 	{
 		body.move(sf::Vector2f(0.0f, f));
 	}
+
+	void SetHorizontalPosition(float x);
+	void SetVerticalPosition(float y);
+
 	Collider GetCollider() { return Collider(body); }
 
 private:

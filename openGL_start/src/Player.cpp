@@ -1,6 +1,9 @@
+//play.cpp
+
+
 #include "Player.h"
 #include <iostream>
-
+#include <SFML/Audio.hpp>
 
 
 
@@ -11,7 +14,7 @@ Player::Player(Texture* texture, Vector2u imageCnt, float switchtime, bool backF
 	this->originalSpeed = speed;
 	this->jumpHeight = jumpHeight;
 	row = 0;
-	faceRight = true; 
+	faceRight = true;
 	body.setPosition(50.0f, 150.0f);
 	body.setSize(Vector2f(120.0f, 150.0f));
 	body.setOrigin(body.getSize() / 2.0f);
@@ -28,13 +31,23 @@ void Player::Draw(RenderWindow& window)
 	window.draw(body);
 }
 
+void Player::SetHorizontalPosition(float x)
+{
+	this->body.setPosition(x, this->getPosition().y);
+}
+
+void Player::SetVerticalPosition(float y)
+{
+	this->body.setPosition(this->getPosition().x, y);
+}
+
 void Player::Update(float deltaTime, FloatRect windowBounds)
 {
 	Vector2f movement(0.0f, 0.0f);
 	bool moveOrIdle = true;
 	bool run = false;
 	float runSpeed = speed * 2;
-
+	
 	if (Keyboard::isKeyPressed(Keyboard::Space)) {
 		run = true;
 		speed = originalSpeed * 3;
@@ -65,16 +78,16 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		moveOrIdle = false;
 		row = 2;
 	}
-	
+
 	if (sf::Keyboard::isKeyPressed(Keyboard::S) and canPull)
 	{
 		canPull = false;
-		body.move(sf::Vector2f(0,20.0f));
+		body.move(sf::Vector2f(0, 20.0f));
 	}
 
 	velocity.y += 981.0f * deltaTime;
 
-	
+
 	if (moveOrIdle)
 	{
 		if (velocity.x == 0.0f)
@@ -91,9 +104,9 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 				faceRight = true;
 			else
 				faceRight = false;
-			
+
 		}
-		
+
 	}
 	/*boundaries setting*/
 	//printf("%f\n", body.getPosition().x);
@@ -125,7 +138,7 @@ void Player::OnCollision(sf::Vector2f direction)
 	{
 		//velocity.y = 0.0f;
 	}
-	else if (direction.y < 0.0f and velocity.y>=0)
+	else if (direction.y < 0.0f and velocity.y >= 0)
 	{
 		velocity.y = -sqrt(2.0f * 981.0f * jumpHeight);
 		canPull = true;
