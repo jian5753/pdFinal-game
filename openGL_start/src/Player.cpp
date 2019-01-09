@@ -60,7 +60,6 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
 		/*move left*/
-		bouncestart.play();
 		velocity.x = -speed;
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::D))

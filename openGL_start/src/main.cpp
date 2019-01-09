@@ -54,14 +54,14 @@ int main(void)
 	sf::Text text;
 	text.setFont(font); // font is a sf::Font
 	text.setCharacterSize(50); // in pixels, not points!
-	text.setFillColor(sf::Color::White);
+	text.setFillColor(sf::Color::Black);
 	text.setStyle(sf::Text::Bold);
 	text.setPosition(120, 5);
 
 	sf::Text word;
 	word.setFont(font); // font is a sf::Font
 	word.setCharacterSize(40); // in pixels, not points!
-	word.setFillColor(sf::Color::White);
+	word.setFillColor(sf::Color::Black);
 	word.setStyle(sf::Text::Bold);
 	word.setPosition(13, 10);
 	word.setString("score");
