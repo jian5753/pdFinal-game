@@ -15,7 +15,7 @@ const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
-const float PLAYER_JUMP = PLAYER_HEIGHT;
+const float PLAYER_JUMP = 165.0f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -81,7 +81,7 @@ int main(void)
 
 
 	/*create player firzen*/
-	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f, 165.0f);
+	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f, PLAYER_JUMP);
 	float deltaTime = 0.0f;
 	
 	Texture startTexture;
