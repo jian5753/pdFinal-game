@@ -212,8 +212,11 @@ int main(void)
 			if (plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
 			{
 				firzen.OnCollision(direction);
-				if(firzen.GetVelocity().y > 0)
+				if (firzen.GetVelocity().y > 0)
+				{
 					StartToRecordScore = true;
+					platform1.SetVerticalPosition(platform1.getPosition().y + WINDOW_HEIGHT);
+				}
 			}
 		}
 		lastPositionY = WINDOW_HEIGHT + 1;
