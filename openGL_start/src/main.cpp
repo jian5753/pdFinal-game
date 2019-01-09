@@ -96,6 +96,8 @@ int main(void)
 
 	//ready to play
 
+	float score = 0;
+	bool StartToRecordScore = false;
 	while (true) {
 		Event evnt;
 		while (window.pollEvent(evnt)) {
@@ -205,8 +207,12 @@ int main(void)
 		}
 		for (int i = 0; i < platCnt; i++)
 		{
-			if(plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
+			if (plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
+			{
 				firzen.OnCollision(direction);
+				if(firzen.GetVelocity().y > 0)
+					StartToRecordScore = true;
+			}
 		}
 		
 		/*make platforms fall*/
@@ -257,15 +263,14 @@ int main(void)
 		}
 		// set the string to display
 		std::ostringstream oss;
-		float score = 0;
-		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score)
+		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score && StartToRecordScore == true)
 		{
-			score += ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
-			oss << static_cast<int>(score);
-			std::string str = oss.str();
-			text.setString(str);
+			score = ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
 		}
-		text.setPosition(120, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		oss << static_cast<int>(score);
+		std::string str = oss.str();
+		text.setString(str);
+		text.setPosition(121, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		word.setPosition(13, 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		window.draw(text);
 		window.draw(word);
