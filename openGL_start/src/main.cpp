@@ -69,14 +69,14 @@ int main(void)
 	/*create player firzen*/
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f,150.0f);
 	float deltaTime = 0.0f;
-
-	//ready to play
-
 	
 	Texture startTexture;
 	startTexture.loadFromFile("fighters/start/startDark.png");
 
 	Platform startImg(&startTexture, sf::Vector2f(364.0f, 61.0f), sf::Vector2f((WINDOW_WIDTH/2), 550.0f));
+
+	Texture pfTexture;
+	pfTexture.loadFromFile("fighters/background/platform.png");
 
 	//ready to play
 
@@ -139,7 +139,7 @@ int main(void)
 			std::cout << "left\n";
 		}
 		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.5);
-		plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
+		plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
 		lastPositionX = positionX;
 		lastPositionY = positionY;
 	}
@@ -210,7 +210,7 @@ int main(void)
 				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
 				std::printf("new position (%f,%f)", positionX, positionY);
 				//system("pause");
-				plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
+				plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
 			}
 		}
 
