@@ -282,8 +282,13 @@ int main(void)
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
 
-		// set the string to display
+		//GameOver
+		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
+		{
 
+		}
+
+		// set the string to display
 		std::ostringstream oss;
 		totalTime += deltaTime*10;
 		tempScore = (WINDOW_HEIGHT - firzen.getPosition().y) / 10 + totalTime;
