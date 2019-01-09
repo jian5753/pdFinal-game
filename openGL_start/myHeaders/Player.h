@@ -33,7 +33,7 @@ private:
 	bool faceRight;
 
 	sf::Vector2f velocity;
-	bool canJump;
+	bool canPull;
 	float jumpHeight;
 };
 

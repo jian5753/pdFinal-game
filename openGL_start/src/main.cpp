@@ -12,7 +12,10 @@ const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
+
+/*would effect difficulty*/
 const float PLAYER_JUMP = PLAYER_HEIGHT;
+const float PLATFORM_DROP_V = 0.4f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -75,13 +78,11 @@ int main(void)
 			positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
 			std::cout << "left\n";
 		}
-		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.8);
+		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.7);
 		plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
 		lastPositionX = positionX;
 		lastPositionY = positionY;
 	}
-
-
 
 
 	/*timer to keep animation update*/
@@ -129,20 +130,11 @@ int main(void)
 			if(plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
 				firzen.OnCollision(direction);
 		}
-		/*
-		deltaX = abs(platform2.getPosition().x - firzen.getPosition().x);
-		deltaY = abs(platform2.getPosition().y - firzen.getPosition().y);
-		intersectionX = deltaX - (PLAYER_WIDTH / 2 + PLATFORM_WIDTH / 2);
-		intersectionY = deltaY - (PLAYER_HEIGHT / 2 + PLATFORM_HEIGHT / 2);
-		if (intersectionY <= 0 && intersectionX <= 0)
-		{
-			firzen.SetVerticalVelocity(-sqrt(2.0f * 981.0f * PLAYER_JUMP));
-		}*/
-		
+
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
-			plats[i]->setVerticalVelocity(0.4f);
+			plats[i]->setVerticalVelocity(PLATFORM_DROP_V);
 			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
 				std::printf("block # %i baba~\n",i);
 				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
@@ -188,4 +180,5 @@ int main(void)
 
 		window.display();
 	}
+	return 0;
 }
