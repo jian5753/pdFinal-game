@@ -105,7 +105,6 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		
 	}
 	/*boundaries setting*/
-	printf("%f\n", body.getPosition().x);
 	if (body.getPosition().x < windowBounds.left && velocity.x < 0.0f) {
 		velocity.x -= velocity.x;
 	}

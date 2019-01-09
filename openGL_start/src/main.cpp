@@ -3,6 +3,8 @@
 #include <Player.h>
 #include <Collider.h>
 #include <Platform.h>
+#include <cstdlib>
+#include <ctime>
 using namespace sf;
 
 static const float VIEW_HEIGHT = 300.0f;
@@ -16,8 +18,9 @@ void ReSizeView(const RenderWindow& window, View& view)
 
 int main(void)
 {
+	srand(static_cast <unsigned> (time(0)));
 	/*screen display shits*/
-	RenderWindow window(VideoMode(1080, 720), "Doodle", Style::Close | Style::Resize);
+	RenderWindow window(VideoMode(480, 700), "Doodle", Style::Close | Style::Resize);
 	sf::FloatRect windowBounds(sf::Vector2f(0.f, 0.f), window.getDefaultView().getSize());
 	View view(Vector2f(0.0f, 0.0f), Vector2f(720.0f, 360.0f));
 
@@ -28,7 +31,11 @@ int main(void)
 
 	/*background image*/
 	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("fighters/background/bg.jpg");
+	backgroundTexture.loadFromFile("fighters/background/bg.png");
+
+	/*platform image*/
+	Texture platformTexture;
+	platformTexture.loadFromFile("fighters/Buttens and Headers/ButtonWide_GreenDark.png");
 
 
 	/*create player firzen*/
@@ -36,8 +43,38 @@ int main(void)
 	float deltaTime = 0.0f;
 
 	/*create some platform to test*/
-	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 300.0f));
-	Platform platform2(NULL, sf::Vector2f(100.0f, 50.0f), sf::Vector2f(200.0f, 150.0f));
+	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 1.0f), sf::Vector2f(0.0f, window.getDefaultView().getSize().y));
+	Platform* randomPlatformList[16];
+	int platformCount = 0;
+	Platform platform(&platformTexture, sf::Vector2f(100.0f, 50.0f), sf::Vector2f(static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / window.getDefaultView().getSize().x)), static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / window.getDefaultView().getSize().y))));
+	randomPlatformList[0] = &platform;
+	platformCount++;
+	Platform* tempPlatformPtr;
+	while (true) {
+		tempPlatformPtr = new Platform(&platformTexture, sf::Vector2f(100.0f, 50.0f), sf::Vector2f(static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / window.getDefaultView().getSize().x)), static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / window.getDefaultView().getSize().y))));
+		for (int i = 0; i < platformCount; i++) {
+			if (randomPlatformList[i]->getPosition().x - platform.getPosition().x < firzen.body.getSize().x * 1.5f) {
+				if (randomPlatformList[i]->getPosition().y - platform.getPosition().y < firzen.body.getSize().y * 1.8f) {
+					if (i + 1 == platformCount) {
+						randomPlatformList[i + 1] = &platform;
+						platformCount++;
+						break;
+					}
+				}
+				else {
+					delete tempPlatformPtr;
+					break;
+				}
+			}
+			else{
+					delete tempPlatformPtr;
+					break;
+				}
+		}
+		if (platformCount == 14) 
+			break;
+	}
+	
 
 	/*timer to keep animation update*/
 	Clock clock;
@@ -75,11 +112,6 @@ int main(void)
 			firzen.OnCollision(direction);
 		}
 		
-		if (platform2.GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
-		{
-			firzen.OnCollision(direction);
-		}
-		
 		/*set some window shit including view*/
 		view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
@@ -90,7 +122,9 @@ int main(void)
 		window.draw(background);
 		firzen.Draw(window);
 		platform1.Draw(window);
-		platform2.Draw(window);
+		for (int i = 0; i < 14; i++) 
+			randomPlatformList[i]->Draw(window);
+		
 
 		/*some output*/
 		opTime += deltaTime;
