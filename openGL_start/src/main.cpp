@@ -63,7 +63,7 @@ int main(void)
 
 	/*background image*/
 	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("fighters/background/bg.jpg");
+	backgroundTexture.loadFromFile("fighters/background/bgg.jpg");
 
 
 	/*create player firzen*/
