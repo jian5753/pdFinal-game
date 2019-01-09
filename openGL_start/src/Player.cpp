@@ -58,15 +58,6 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 	{
 		velocity.x = 0;
 	}
-	/* jump not up and down
-	if (Keyboard::isKeyPressed(Keyboard::S))
-		//move down
-		movement.y += speed * deltaTime;
-
-	if (Keyboard::isKeyPressed(Keyboard::W))
-		//move right
-		movement.y -= speed * deltaTime;
-	*/
 
 	if (Keyboard::isKeyPressed(Keyboard::G))
 	{
@@ -74,11 +65,11 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		moveOrIdle = false;
 		row = 2;
 	}
-
-	if (sf::Keyboard::isKeyPressed(Keyboard::W) && canJump)
+	
+	if (sf::Keyboard::isKeyPressed(Keyboard::S) and canPull)
 	{
-		canJump = false;
-		velocity.y = -sqrt(2.0f * 981.0f * jumpHeight);
+		canPull = false;
+		body.move(sf::Vector2f(0,20.0f));
 	}
 
 	velocity.y += 981.0f * deltaTime;
@@ -105,6 +96,7 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 		
 	}
 	/*boundaries setting*/
+	//printf("%f\n", body.getPosition().x);
 	if (body.getPosition().x < windowBounds.left && velocity.x < 0.0f) {
 		velocity.x -= velocity.x;
 	}
@@ -122,20 +114,20 @@ void Player::OnCollision(sf::Vector2f direction)
 {
 	if (direction.x < 0.0f)
 	{
-		velocity.x = 0.0f;
+		//velocity.x = 0.0f;
 	}
 	else if (direction.x > 0.0f)
 	{
-		velocity.x = 0.0f;
+		//velocity.x = 0.0f;
 	}
 
 	if (direction.y > 0.0f)
 	{
-		velocity.y = 0.0f;
+		//velocity.y = 0.0f;
 	}
-	else if (direction.y < 0.0f)
+	else if (direction.y < 0.0f and velocity.y>=0)
 	{
-		velocity.y = 0.0f;
-		canJump = true;
+		velocity.y = -sqrt(2.0f * 981.0f * jumpHeight);
+		canPull = true;
 	}
 }

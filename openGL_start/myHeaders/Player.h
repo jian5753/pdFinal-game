@@ -13,6 +13,10 @@ public:
 	void Draw(RenderWindow& window);
 	void OnCollision(sf::Vector2f direction);
 	sf::Vector2f GetVelocity() { return velocity; }
+	void SetVerticalVelocity(float y)
+	{
+		velocity.y = y;
+	}
 
 	Vector2f getPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
@@ -29,7 +33,7 @@ private:
 	bool faceRight;
 
 	sf::Vector2f velocity;
-	bool canJump;
+	bool canPull;
 	float jumpHeight;
 };
 
