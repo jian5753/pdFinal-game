@@ -23,10 +23,8 @@ void ReSizeView(const RenderWindow& window, View& view)
 	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
 }
 
+/*create shit tons of platforms*/
 const int platCnt = 18;
-/*create a shit ton of platforms*/
-
-
 
 int main(void)
 {
@@ -93,6 +91,10 @@ int main(void)
 
 	Texture pfTexture;
 	pfTexture.loadFromFile("fighters/background/platform.png");
+
+	/*to record total time and height passed in the game */
+	float totalTime = 0.0f;
+	float tempScore=0.0f;
 
 	//ready to play
 
@@ -261,11 +263,15 @@ int main(void)
 			opTime = 0.0f;
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
+
 		// set the string to display
+
 		std::ostringstream oss;
-		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score && StartToRecordScore == true)
+		totalTime += deltaTime*10;
+		tempScore = (WINDOW_HEIGHT - firzen.getPosition().y) / 10 + totalTime;
+		if (tempScore > score && StartToRecordScore == true)
 		{
-			score = ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
+			score = tempScore;
 		}
 		oss << static_cast<int>(score);
 		std::string str = oss.str();
