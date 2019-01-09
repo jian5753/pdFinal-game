@@ -282,6 +282,12 @@ int main(void)
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
 
+		//GameOver
+		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
+		{
+
+		}
+		
 		// set the string to display
 
 		std::ostringstream oss;
