@@ -61,7 +61,7 @@ int screen_0::Run(sf::RenderWindow &window)
 					case option:
 						break;
 					case exitGame:
-						window.close();
+						return (-1); //notsure
 						break;
 					}
 				}
