@@ -28,6 +28,8 @@ const int platCnt = 18;
 
 int main(void)
 {
+
+	/*sound effect*/
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
 		return -1;
@@ -42,7 +44,7 @@ int main(void)
 	sf::Sound start;
 	start.setBuffer(startsound);
 	
-
+	/* text output*/
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
 	{
@@ -131,18 +133,7 @@ int main(void)
 	
 	
 
-
-	/*create some platform to test*/
-	/* to Zi Shian
-	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
-	and you'll need two sf::vector2f to determin the size (first) and position(second).
-
-	After finishing creating platform, remember to adjust the code in the "collision section" and "draw section" 
-	so that the new platforms will work correctly.
-
-	Also, there's a function of platform objects "setVerticalVelocity" (i wrote it in the platform.h)
-	if you wanna make some platforms to fall.
-	*/ 
+	//ground
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
 
 	/*create shit tons of platforms*/
@@ -289,7 +280,6 @@ int main(void)
 		}
 		
 		// set the string to display
-
 		std::ostringstream oss;
 		totalTime += deltaTime*10;
 		tempScore = (WINDOW_HEIGHT - firzen.getPosition().y) / 10 + totalTime;
