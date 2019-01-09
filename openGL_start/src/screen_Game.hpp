@@ -6,6 +6,7 @@
 #include <string>
 #include "cScreen.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class screen_1 : public cScreen
 {
@@ -18,6 +19,7 @@ private:
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
 	Texture firzenTexture;
 	Texture backgroundTexture;
+	Texture pfTexture;
 	
 	sf::FloatRect windowBounds;
 	
@@ -55,6 +57,8 @@ screen_1::screen_1(void)
 
 	/*timer to keep animation update*/
 	opTime = 0.0f;
+
+	pfTexture.loadFromFile("fighters/background/platform.png");
 }
 
 /*helper func.*/
@@ -79,6 +83,22 @@ int screen_1::Run(sf::RenderWindow &window)
 	word.setPosition(13, 10);
 	word.setString("score");
 	
+
+	/*Sound*/
+	sf::SoundBuffer buffer;
+	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
+		return -1;
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setVolume(30.f);
+	sound.setLoop(true);
+	sf::SoundBuffer startsound;
+	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
+		return -1;
+	sf::Sound start;
+	start.setBuffer(startsound);
+
+
 	/*texture loading*/
 	/*role image*/
 	firzenTexture.loadFromFile("fighters/firzen/firzen_noMargin.png");
@@ -109,7 +129,7 @@ int screen_1::Run(sf::RenderWindow &window)
 			std::cout << "left\n";
 		}
 		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.5);
-		plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
+		plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
 		lastPositionX = positionX;
 		lastPositionY = positionY;
 	}
@@ -122,6 +142,12 @@ int screen_1::Run(sf::RenderWindow &window)
 	window.draw(background);
 	window.display();
 
+
+	/*to record total time and height passed in the game */
+	float totalTime = 0.0f;
+	float tempScore = 0.0f;
+	float score = 0;
+	bool StartToRecordScore = false;
 
 	sf::Event evnt;
 	bool Running = true;
@@ -162,14 +188,26 @@ int screen_1::Run(sf::RenderWindow &window)
 		for (int i = 0; i < platCnt; i++)
 		{
 			if (plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
+			{
 				firzen.OnCollision(direction);
+				if (firzen.GetVelocity().y > 0)
+				{
+					StartToRecordScore = true;
+					platform1.SetVerticalPosition(platform1.getPosition().y + WINDOW_HEIGHT);
+				}
+			}
 		}
+		lastPositionY = WINDOW_HEIGHT + 1;
 
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
+
+			for (int j = 0; j < platCnt; j++)
+				if (plats[j]->getPosition().y < lastPositionY)
+					lastPositionY = plats[j]->getPosition().y;
 			plats[i]->setVerticalVelocity(0.3f);
-			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
+			if (StartToRecordScore && (plats[i]->getPosition().y - firzen.getPosition().y > WINDOW_HEIGHT / 2 || plats[i]->getPosition().y > WINDOW_HEIGHT) || plats[i]->getPosition().y > WINDOW_HEIGHT) {
 				std::printf("block # %i baba~\n", i);
 				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
 
@@ -182,14 +220,27 @@ int screen_1::Run(sf::RenderWindow &window)
 				{
 					positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
 				}
-				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
+				//				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
+
+				std::cout << "lastY : " << lastPositionY << std::endl;
+				positionY = lastPositionY - rand() % 2 - (float)(PLAYER_HEIGHT*0.5);
+
+				lastPositionY = positionY;
 				std::printf("new position (%f,%f)", positionX, positionY);
 				//system("pause");
-				plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
+				plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
 			}
 		}
+
+
 		/*set some window shit including view*/
-		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
+		if (firzen.getPosition().y > WINDOW_HEIGHT / 2)
+			view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+		else
+			view.setCenter(WINDOW_WIDTH / 2, firzen.getPosition().y);	//need setCenter after calling player.update()
+		window.clear(Color(150, 150, 150));
+		window.setView(view);
+
 		window.clear(Color(150, 150, 150));
 		//window.setView(view);
 
@@ -209,12 +260,28 @@ int screen_1::Run(sf::RenderWindow &window)
 			opTime = 0.0f;
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
+		//GameOver
+		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
+		{
+
+		}
+
 		// set the string to display
 		std::ostringstream oss;
-		float score = ((WINDOW_HEIGHT - firzen.getPosition().y));
+		totalTime += deltaTime * 10;
+		tempScore = (WINDOW_HEIGHT - firzen.getPosition().y) / 10 + totalTime;
+		if (tempScore > score && StartToRecordScore == true)
+		{
+			score = tempScore;
+		}
 		oss << static_cast<int>(score);
 		std::string str = oss.str();
 		text.setString(str);
+		if (firzen.getPosition().y < WINDOW_HEIGHT / 2)
+		{
+			text.setPosition(121, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+			word.setPosition(13, 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		}
 		window.draw(text);
 		window.draw(word);
 		window.display();
