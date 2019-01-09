@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <iostream>
-
+#include <SFML/Audio.hpp>
 
 
 
@@ -34,7 +34,7 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 	bool moveOrIdle = true;
 	bool run = false;
 	float runSpeed = speed * 2;
-
+	
 	if (Keyboard::isKeyPressed(Keyboard::Space)) {
 		run = true;
 		speed = originalSpeed * 3;
@@ -47,6 +47,7 @@ void Player::Update(float deltaTime, FloatRect windowBounds)
 	if (Keyboard::isKeyPressed(Keyboard::A))
 	{
 		/*move left*/
+		bouncestart.play();
 		velocity.x = -speed;
 	}
 	else if (Keyboard::isKeyPressed(Keyboard::D))

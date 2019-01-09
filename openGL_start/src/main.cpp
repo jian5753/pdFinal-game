@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <Player.h>
 #include <Collider.h>
@@ -29,6 +30,21 @@ const int platCnt = 18;
 
 int main(void)
 {
+	sf::SoundBuffer buffer;
+	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
+		return -1;
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setVolume(30.f);
+	sound.setLoop(true);
+
+	sf::SoundBuffer startsound;
+	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
+		return -1;
+	sf::Sound start;
+	start.setBuffer(startsound);
+	
+
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
 	{
@@ -98,15 +114,18 @@ int main(void)
 //		std::printf("press space to start!");
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
+			start.play();
 			break;
 		}
+		sound.play();
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
 		window.draw(background);
 		startImg.Draw(window);
 		window.display();
 	}
-
+	
+	
 
 
 	/*create some platform to test*/
@@ -237,10 +256,15 @@ int main(void)
 		}
 		// set the string to display
 		std::ostringstream oss;
-		float score = ((WINDOW_HEIGHT - firzen.getPosition().y));
-		oss << static_cast<int>(score);
-		std::string str = oss.str();
-		text.setString(str);
+		float score = 0;
+		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score)
+		{
+			score += ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
+			oss << static_cast<int>(score);
+			std::string str = oss.str();
+			text.setString(str);
+		}
+
 		window.draw(text);
 		window.draw(word);
 		window.display();

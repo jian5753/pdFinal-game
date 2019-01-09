@@ -2,6 +2,7 @@
 #include <SFML/\Graphics.hpp>
 #include <Animation.h>
 #include <Collider.h>
+#include <SFML/Audio.hpp>
 using namespace sf;
 class Player
 {
