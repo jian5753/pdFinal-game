@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <Player.h>
 #include <Collider.h>
@@ -15,7 +16,6 @@ const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
 const float PLAYER_JUMP = PLAYER_HEIGHT;
-const float PLATFORM_FALL_SPEED = 0.3f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -30,6 +30,21 @@ const int platCnt = 18;
 
 int main(void)
 {
+	sf::SoundBuffer buffer;
+	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
+		return -1;
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setVolume(30.f);
+	sound.setLoop(true);
+
+	sf::SoundBuffer startsound;
+	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
+		return -1;
+	sf::Sound start;
+	start.setBuffer(startsound);
+	
+
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
 	{
@@ -39,14 +54,14 @@ int main(void)
 	sf::Text text;
 	text.setFont(font); // font is a sf::Font
 	text.setCharacterSize(50); // in pixels, not points!
-	text.setFillColor(sf::Color::White);
+	text.setFillColor(sf::Color::Black);
 	text.setStyle(sf::Text::Bold);
 	text.setPosition(120, 5);
 
 	sf::Text word;
 	word.setFont(font); // font is a sf::Font
 	word.setCharacterSize(40); // in pixels, not points!
-	word.setFillColor(sf::Color::White);
+	word.setFillColor(sf::Color::Black);
 	word.setStyle(sf::Text::Bold);
 	word.setPosition(13, 10);
 	word.setString("score");
@@ -64,20 +79,20 @@ int main(void)
 
 	/*background image*/
 	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("fighters/background/bg.jpg");
+	backgroundTexture.loadFromFile("fighters/background/bgg.jpg");
 
 
 	/*create player firzen*/
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f,150.0f);
 	float deltaTime = 0.0f;
-
-	//ready to play
-
 	
 	Texture startTexture;
 	startTexture.loadFromFile("fighters/start/startDark.png");
 
 	Platform startImg(&startTexture, sf::Vector2f(364.0f, 61.0f), sf::Vector2f((WINDOW_WIDTH/2), 550.0f));
+
+	Texture pfTexture;
+	pfTexture.loadFromFile("fighters/background/platform.png");
 
 	//ready to play
 
@@ -99,15 +114,18 @@ int main(void)
 //		std::printf("press space to start!");
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
+			start.play();
 			break;
 		}
+		sound.play();
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
 		window.draw(background);
 		startImg.Draw(window);
 		window.display();
 	}
-
+	
+	
 
 
 	/*create some platform to test*/
@@ -140,7 +158,7 @@ int main(void)
 			std::cout << "left\n";
 		}
 		positionY = lastPositionY - rand() % 20 - (float)(PLAYER_HEIGHT*0.5);
-		plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
+		plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX,positionY));
 		lastPositionX = positionX;
 		lastPositionY = positionY;
 	}
@@ -148,7 +166,6 @@ int main(void)
 	/*timer to keep animation update*/
 	Clock clock;
 	float opTime = 0.0f;
-	float totalTime = 0.0f; // to record total time passed in the game
 	const float OP_FREQ = 1.0f;
 
 	/*variables to check collision between player and platforms*/
@@ -195,7 +212,7 @@ int main(void)
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
-			plats[i]->setVerticalVelocity(PLATFORM_FALL_SPEED);
+			plats[i]->setVerticalVelocity(0.3f);
 			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
 				std::printf("block # %i baba~\n",i);
 				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
@@ -212,7 +229,7 @@ int main(void)
 				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
 				std::printf("new position (%f,%f)", positionX, positionY);
 				//system("pause");
-				plats[i] = new Platform(NULL, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
+				plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
 			}
 		}
 
@@ -229,25 +246,27 @@ int main(void)
 		for (int i = 0; i < platCnt; i++)
 			plats[i]->Draw(window);
 		firzen.Draw(window);
-		
-		/*set the string to display*/
-		std::ostringstream oss;
-		totalTime += deltaTime;
-		float score = ((WINDOW_HEIGHT - firzen.getPosition().y) + totalTime * PLATFORM_FALL_SPEED * 100);
-		oss << static_cast<int>(score);
-		std::string str = oss.str();
-		text.setString(str);
-		window.draw(text);
-		window.draw(word);
-		window.display();
-
 		/*some output*/
 		opTime += deltaTime;
 		// positive means upward
-		if (opTime >= OP_FREQ)
+		if (opTime >= OP_FREQ )
 		{
 			opTime = 0.0f;
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
+		// set the string to display
+		std::ostringstream oss;
+		float score = 0;
+		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score)
+		{
+			score += ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
+			oss << static_cast<int>(score);
+			std::string str = oss.str();
+			text.setString(str);
+		}
+
+		window.draw(text);
+		window.draw(word);
+		window.display();
 	}
 }
