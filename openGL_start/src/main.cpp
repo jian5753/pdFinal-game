@@ -214,13 +214,16 @@ int main(void)
 			}
 		}
 
+
+
 		/*set some window shit including view*/
-		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
+		view.setCenter(WINDOW_WIDTH/2, firzen.getPosition().y);	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
-		//window.setView(view);
+		window.setView(view);
 
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
+		background.setPosition(0, firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		window.draw(background);
 		
 		platform1.Draw(window);
@@ -241,7 +244,11 @@ int main(void)
 		oss << static_cast<int>(score);
 		std::string str = oss.str();
 		text.setString(str);
+		text.setPosition(120 , 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+
+		word.setPosition(13 , 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		window.draw(text);
+
 		window.draw(word);
 		window.display();
 	}
