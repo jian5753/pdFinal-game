@@ -15,7 +15,7 @@ const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
-const float PLAYER_JUMP = PLAYER_HEIGHT;
+const float PLAYER_JUMP = 165.0f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -24,7 +24,7 @@ void ReSizeView(const RenderWindow& window, View& view)
 }
 
 /*create shit tons of platforms*/
-const int platCnt = 18;
+const int platCnt = 36;
 
 int main(void)
 {
@@ -234,8 +234,8 @@ int main(void)
 				{
 					positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
 				}
-				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
-				std::printf("new position (%f,%f)", positionX, positionY);
+				positionY = rand() % 2 - (float)WINDOW_HEIGHT*2.8;
+				std::printf("new position (%f,%f)\n", positionX, positionY);
 				//system("pause");
 				plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
 			}
