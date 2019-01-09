@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <Player.h>
 #include <Collider.h>
@@ -29,6 +30,21 @@ const int platCnt = 18;
 
 int main(void)
 {
+	sf::SoundBuffer buffer;
+	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
+		return -1;
+	sf::Sound sound;
+	sound.setBuffer(buffer);
+	sound.setVolume(30.f);
+	sound.setLoop(true);
+
+	sf::SoundBuffer startsound;
+	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
+		return -1;
+	sf::Sound start;
+	start.setBuffer(startsound);
+	
+
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
 	{
@@ -38,14 +54,14 @@ int main(void)
 	sf::Text text;
 	text.setFont(font); // font is a sf::Font
 	text.setCharacterSize(50); // in pixels, not points!
-	text.setFillColor(sf::Color::White);
+	text.setFillColor(sf::Color::Black);
 	text.setStyle(sf::Text::Bold);
 	text.setPosition(120, 5);
 
 	sf::Text word;
 	word.setFont(font); // font is a sf::Font
 	word.setCharacterSize(40); // in pixels, not points!
-	word.setFillColor(sf::Color::White);
+	word.setFillColor(sf::Color::Black);
 	word.setStyle(sf::Text::Bold);
 	word.setPosition(13, 10);
 	word.setString("score");
@@ -98,15 +114,18 @@ int main(void)
 //		std::printf("press space to start!");
 		if (Keyboard::isKeyPressed(Keyboard::Space))
 		{
+			start.play();
 			break;
 		}
+		sound.play();
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
 		window.draw(background);
 		startImg.Draw(window);
 		window.display();
 	}
-
+	
+	
 
 
 	/*create some platform to test*/
@@ -214,16 +233,13 @@ int main(void)
 			}
 		}
 
-
-
 		/*set some window shit including view*/
-		view.setCenter(WINDOW_WIDTH/2, firzen.getPosition().y);	//need setCenter after calling player.update()
+		//view.setCenter(firzen.getPosition());	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
-		window.setView(view);
+		//window.setView(view);
 
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
-		background.setPosition(0, firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		window.draw(background);
 		
 		platform1.Draw(window);
@@ -240,15 +256,16 @@ int main(void)
 		}
 		// set the string to display
 		std::ostringstream oss;
-		float score = ((WINDOW_HEIGHT - firzen.getPosition().y));
-		oss << static_cast<int>(score);
-		std::string str = oss.str();
-		text.setString(str);
-		text.setPosition(120 , 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		float score = 0;
+		if ((WINDOW_HEIGHT - firzen.getPosition().y) / 10 > score)
+		{
+			score += ((WINDOW_HEIGHT - firzen.getPosition().y) / 10);
+			oss << static_cast<int>(score);
+			std::string str = oss.str();
+			text.setString(str);
+		}
 
-		word.setPosition(13 , 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		window.draw(text);
-
 		window.draw(word);
 		window.display();
 	}
