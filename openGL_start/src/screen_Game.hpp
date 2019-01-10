@@ -7,6 +7,7 @@
 #include "cScreen.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+using namespace sf;
 
 class screen_1 : public cScreen
 {
@@ -17,13 +18,16 @@ private:
 
 	/*declare texture and load file*/
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
-	Texture firzenTexture;
-	Texture backgroundTexture;
-	Texture pfTexture;
+	sf::Texture firzenTexture;
+	sf::Texture backgroundTexture;
+	sf::Texture pfTexture;
 	
 	sf::FloatRect windowBounds;
 	
 	sf::View view;
+
+	sf::Text gameovertext;
+
 
 	/*timer to keep animation update*/
 	Clock clock;
@@ -83,6 +87,11 @@ int screen_1::Run(sf::RenderWindow &window)
 	word.setPosition(13, 10);
 	word.setString("score");
 	
+	gameovertext.setFont(font); // font is a sf::Font
+	gameovertext.setCharacterSize(100); // in pixels, not points!
+	gameovertext.setFillColor(sf::Color::Red);
+	gameovertext.setStyle(sf::Text::Bold);
+	gameovertext.setString("gameover");
 
 	/*Sound*/
 	sf::SoundBuffer buffer;
@@ -96,14 +105,19 @@ int screen_1::Run(sf::RenderWindow &window)
 	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
 		return -1;
 	sf::Sound start;
+
 	start.setBuffer(startsound);
-
-
+	sf::SoundBuffer gameoverBuffer;
+	if (!gameoverBuffer.loadFromFile("Lose Game Sound Effect.wav"))
+		return -1;
+	sf::Sound gameoversound;
+	gameoversound.setBuffer(gameoverBuffer);
+	sound.play();
 	/*texture loading*/
 	/*role image*/
 	firzenTexture.loadFromFile("fighters/firzen/firzen_noMargin.png");
 	/*background image*/
-	backgroundTexture.loadFromFile("fighters/background/bg.jpg");
+	backgroundTexture.loadFromFile("fighters/background/BACKGROUND.jpg");
 	
 	/*create player firzen*/
 	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f, 150.0f);
@@ -133,15 +147,9 @@ int screen_1::Run(sf::RenderWindow &window)
 		lastPositionX = positionX;
 		lastPositionY = positionY;
 	}
-	
-	// before drawing, clean it 
-	window.clear(sf::Color(0, 0, 0, 0));
 	/*screen display shits*/
-	/*draw background*/
 	sf::Sprite background(backgroundTexture);
-	window.draw(background);
-	window.display();
-
+	
 
 	/*to record total time and height passed in the game */
 	float totalTime = 0.0f;
@@ -178,6 +186,7 @@ int screen_1::Run(sf::RenderWindow &window)
 			deltaTime = 1.0f / 20.0f;
 		firzen.Update(deltaTime, windowBounds);
 
+		
 		/*make platforms drop*/
 
 		/*collision*/
@@ -199,6 +208,7 @@ int screen_1::Run(sf::RenderWindow &window)
 		}
 		lastPositionY = WINDOW_HEIGHT + 1;
 
+		
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
@@ -232,20 +242,15 @@ int screen_1::Run(sf::RenderWindow &window)
 			}
 		}
 
-
+		
 		/*set some window shit including view*/
 		if (firzen.getPosition().y > WINDOW_HEIGHT / 2)
 			view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 		else
 			view.setCenter(WINDOW_WIDTH / 2, firzen.getPosition().y);	//need setCenter after calling player.update()
 		window.clear(Color(150, 150, 150));
-		window.setView(view);
-
-		window.clear(Color(150, 150, 150));
 		//window.setView(view);
 
-		/*draw*/
-		sf::Sprite background(backgroundTexture);
 		window.draw(background);
 
 		platform1.Draw(window);
@@ -260,10 +265,13 @@ int screen_1::Run(sf::RenderWindow &window)
 			opTime = 0.0f;
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
-		//GameOver
+		/*Game Over*/
 		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
 		{
-
+			sound.pause();
+			gameoversound.play();
+			gameovertext.setPosition(300, 300);
+			window.draw(gameovertext);
 		}
 
 		// set the string to display
