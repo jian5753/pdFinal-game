@@ -44,6 +44,12 @@ int main(void)
 	sf::Sound start;
 	start.setBuffer(startsound);
 	
+	sf::SoundBuffer gameoverBuffer;
+	if (!gameoverBuffer.loadFromFile("Lose Game Sound Effect.wav"))
+		return -1;
+	sf::Sound gameoversound;
+	gameoversound.setBuffer(gameoverBuffer);
+	bool havePlayedSound = false;
 	/* text output*/
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
@@ -65,6 +71,13 @@ int main(void)
 	word.setStyle(sf::Text::Bold);
 	word.setPosition(13, 10);
 	word.setString("score");
+
+	sf::Text gameovertext;
+	gameovertext.setFont(font); // font is a sf::Font
+	gameovertext.setCharacterSize(100); // in pixels, not points!
+	gameovertext.setFillColor(sf::Color::Red);
+	gameovertext.setStyle(sf::Text::Bold);
+	gameovertext.setString("gameover");
 
 	// inside the main loop, between window.clear() and window.display()
 	/*screen display shits*/
@@ -276,7 +289,16 @@ int main(void)
 		//GameOver
 		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
 		{
-
+			gameoversound.setVolume(30.0f);
+			if (havePlayedSound == false)
+			{
+				sound.stop();
+				gameoversound.play();
+			}
+			havePlayedSound = true;
+			gameovertext.setPosition(300, 300);
+			window.draw(gameovertext);
+			//system("pause");
 		}
 		
 		// set the string to display
