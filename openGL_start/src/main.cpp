@@ -6,6 +6,7 @@
 #include <Platform.h>
 #include <sstream>
 #include <string>
+
 using namespace sf;
 
 static const float VIEW_HEIGHT = 300.0f;
@@ -38,6 +39,13 @@ int main(void)
 	sound.setVolume(30.f);
 	sound.setLoop(true);
 
+	sf::SoundBuffer gameoverBuffer;
+	if (!gameoverBuffer.loadFromFile("Lose Game Sound Effect.wav"))
+		return -1;
+	sf::Sound gameoversound;
+	gameoversound.setBuffer(gameoverBuffer);
+	
+	
 	sf::SoundBuffer startsound;
 	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
 		return -1;
@@ -56,15 +64,22 @@ int main(void)
 	text.setCharacterSize(50); // in pixels, not points!
 	text.setFillColor(sf::Color::White);
 	text.setStyle(sf::Text::Bold);
-	text.setPosition(120, 5);
+	//text.setPosition(120, 5);
 
 	sf::Text word;
 	word.setFont(font); // font is a sf::Font
 	word.setCharacterSize(40); // in pixels, not points!
 	word.setFillColor(sf::Color::White);
 	word.setStyle(sf::Text::Bold);
-	word.setPosition(13, 10);
+	//word.setPosition(13, 10);
 	word.setString("score");
+
+	sf::Text gameovertext;
+	gameovertext.setFont(font); // font is a sf::Font
+	gameovertext.setCharacterSize(100); // in pixels, not points!
+	gameovertext.setFillColor(sf::Color::Red);
+	gameovertext.setStyle(sf::Text::Bold);
+	gameovertext.setString("gameover");
 
 	// inside the main loop, between window.clear() and window.display()
 	/*screen display shits*/
@@ -272,13 +287,18 @@ int main(void)
 			opTime = 0.0f;
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
-
+		
+		
 		//GameOver
 		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
 		{
-
+			sound.pause();
+			gameoversound.play();
+			gameovertext.setPosition(300, 300);
+			window.draw(gameovertext);
+			//system("pause");
 		}
-		
+		//window.draw(gameovertext);
 		// set the string to display
 		std::ostringstream oss;
 		totalTime += deltaTime*10;
@@ -295,6 +315,7 @@ int main(void)
 			text.setPosition(121, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 			word.setPosition(13, 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
 		}
+		
 		window.draw(text);
 		window.draw(word);
 		window.display();
