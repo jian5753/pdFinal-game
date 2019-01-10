@@ -31,7 +31,7 @@ int main(void)
 
 	return EXIT_SUCCESS;	
 	
-	/*to Zi Shian    funny stuff tho hahah so i leave it here
+	/*to Zi Shian    
 	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
 	and you'll need two sf::vector2f to determin the size (first) and position(second).
 
@@ -40,5 +40,7 @@ int main(void)
 
 	Also, there's a function of platform objects "setVerticalVelocity" (i wrote it in the platform.h)
 	if you wanna make some platforms to fall.
+
+	lol funny stuff tho hahah so i leave it here
 	*/ 
 }
