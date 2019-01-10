@@ -16,14 +16,13 @@ int main(void)
 	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Doodle", Style::Close | Style::Resize);
 
 	//Mouse cursor no more visible
-	window.setMouseCursorVisible(false);
+	//window.setMouseCursorVisible(false);
 
 	//Screens preparations
 	screen_0 s0;
 	Screens.push_back(&s0);
 	screen_1 s1;
 	Screens.push_back(&s1);
-
 	//Main loop
 	while (screen >= 0)
 	{
