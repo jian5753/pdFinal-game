@@ -15,7 +15,7 @@ const float PLATFORM_WIDTH = 150.0f;
 const float PLATFORM_HEIGHT = 20.0f;
 const float PLAYER_WIDTH = 120.0f;
 const float PLAYER_HEIGHT = 160.0f;
-const float PLAYER_JUMP = PLAYER_HEIGHT;
+const float PLAYER_JUMP = 165.0f;
 
 void ReSizeView(const RenderWindow& window, View& view)
 {
@@ -28,6 +28,8 @@ const int platCnt = 18;
 
 int main(void)
 {
+
+	/*sound effect*/
 	sf::SoundBuffer buffer;
 	if (!buffer.loadFromFile("Dead Or Alive - You Spin Me Round (Like a Record) (online-audio-converter.com).wav"))
 		return -1;
@@ -42,7 +44,7 @@ int main(void)
 	sf::Sound start;
 	start.setBuffer(startsound);
 	
-
+	/* text output*/
 	sf::Font font;
 	if (!font.loadFromFile("OpenSans-SemiboldItalic.ttf"))
 	{
@@ -81,7 +83,7 @@ int main(void)
 
 
 	/*create player firzen*/
-	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f,150.0f);
+	Player firzen(&firzenTexture, Vector2u(4, 4), 0.3f, true, 150.0f, PLAYER_JUMP);
 	float deltaTime = 0.0f;
 	
 	Texture startTexture;
@@ -131,18 +133,7 @@ int main(void)
 	
 	
 
-
-	/*create some platform to test*/
-	/* to Zi Shian
-	To creat platforms you'll need a textrue pointer to set the texture of platform or leave it null to make it white as default.
-	and you'll need two sf::vector2f to determin the size (first) and position(second).
-
-	After finishing creating platform, remember to adjust the code in the "collision section" and "draw section" 
-	so that the new platforms will work correctly.
-
-	Also, there's a function of platform objects "setVerticalVelocity" (i wrote it in the platform.h)
-	if you wanna make some platforms to fall.
-	*/ 
+	//ground
 	Platform platform1(NULL, sf::Vector2f(1000000000000.0f, 50.0f), sf::Vector2f(0.0f, 800.0f));
 
 	/*create shit tons of platforms*/
@@ -212,16 +203,23 @@ int main(void)
 			if (plats[i]->GetCollider().CheckCollision(&firzen.GetCollider(), 1.0f, direction))
 			{
 				firzen.OnCollision(direction);
-				if(firzen.GetVelocity().y > 0)
+				if (firzen.GetVelocity().y > 0)
+				{
 					StartToRecordScore = true;
+					platform1.SetVerticalPosition(platform1.getPosition().y + WINDOW_HEIGHT);
+				}
 			}
 		}
-		
+		lastPositionY = WINDOW_HEIGHT + 1;
 		/*make platforms fall*/
 		for (int i = 0; i < platCnt; i++)
 		{
+			
+			for (int j = 0; j < platCnt; j++)
+				if (plats[j]->getPosition().y < lastPositionY)
+					lastPositionY = plats[j]->getPosition().y;
 			plats[i]->setVerticalVelocity(0.3f);
-			if (plats[i]->getPosition().y > WINDOW_HEIGHT) {
+			if (StartToRecordScore && (plats[i]->getPosition().y - firzen.getPosition().y > WINDOW_HEIGHT / 2 || plats[i]->getPosition().y > WINDOW_HEIGHT ) || plats[i]->getPosition().y > WINDOW_HEIGHT) {
 				std::printf("block # %i baba~\n",i);
 				std::cout << "height : " << plats[i]->getPosition().y << std::endl;
 				
@@ -234,7 +232,12 @@ int main(void)
 				{
 					positionX = (float)WINDOW_WIDTH / 2 - rand() % 300;
 				}
-				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
+//				positionY = rand() % 2 - (float)WINDOW_HEIGHT;
+
+				std::cout << "lastY : " << lastPositionY << std::endl;
+				positionY = lastPositionY - rand() % 2 - (float)(PLAYER_HEIGHT*0.5);
+
+				lastPositionY = positionY;
 				std::printf("new position (%f,%f)", positionX, positionY);
 				//system("pause");
 				plats[i] = new Platform(&pfTexture, sf::Vector2f(PLATFORM_WIDTH, PLATFORM_HEIGHT), sf::Vector2f(positionX, positionY));
@@ -242,13 +245,19 @@ int main(void)
 		}
 
 		/*set some window shit including view*/
+		if(firzen.getPosition().y > WINDOW_HEIGHT / 2)
+			view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2); 
+		else
 		view.setCenter(WINDOW_WIDTH / 2, firzen.getPosition().y);	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
 		window.setView(view);
 
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
-		background.setPosition(0, firzen.getPosition().y - WINDOW_HEIGHT/2);
+		if (firzen.getPosition().y < WINDOW_HEIGHT / 2)
+		{
+			background.setPosition(0, firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		}
 		window.draw(background);
 		
 		platform1.Draw(window);
@@ -264,8 +273,13 @@ int main(void)
 			std::printf("velocity :(%f, %f)\n", firzen.GetVelocity().x, -firzen.GetVelocity().y);
 		}
 
-		// set the string to display
+		//GameOver
+		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
+		{
 
+		}
+		
+		// set the string to display
 		std::ostringstream oss;
 		totalTime += deltaTime*10;
 		tempScore = (WINDOW_HEIGHT - firzen.getPosition().y) / 10 + totalTime;
@@ -276,8 +290,11 @@ int main(void)
 		oss << static_cast<int>(score);
 		std::string str = oss.str();
 		text.setString(str);
-		text.setPosition(121, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
-		word.setPosition(13, 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		if (firzen.getPosition().y < WINDOW_HEIGHT / 2)
+		{
+			text.setPosition(121, 5 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+			word.setPosition(13, 10 + firzen.getPosition().y - WINDOW_HEIGHT / 2);
+		}
 		window.draw(text);
 		window.draw(word);
 		window.display();
