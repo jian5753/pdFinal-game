@@ -44,7 +44,7 @@ int main(void)
 		return -1;
 	sf::Sound gameoversound;
 	gameoversound.setBuffer(gameoverBuffer);
-	
+	bool havePlayedSound = false;
 	
 	sf::SoundBuffer startsound;
 	if (!startsound.loadFromFile("The Voice  Chair choice button (sound effect)-[AudioTrimmer.com] (1).wav"))
@@ -90,6 +90,7 @@ int main(void)
 	/*declare texture and load file*/
 	/*the sizr of player is define in player.cpp by default. no worry of setting size*/
 	Texture firzenTexture;
+
 	firzenTexture.loadFromFile("fighters/firzen/firzen_noMargin.png");
 
 	/*background image*/
@@ -260,12 +261,9 @@ int main(void)
 		}
 
 		/*set some window shit including view*/
-		if(firzen.getPosition().y > WINDOW_HEIGHT / 2)
-			view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2); 
-		else
 		view.setCenter(WINDOW_WIDTH / 2, firzen.getPosition().y);	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
-		window.setView(view);
+		//window.setView(view);
 
 		/*draw*/
 		sf::Sprite background(backgroundTexture);
@@ -290,14 +288,19 @@ int main(void)
 		
 		
 		//GameOver
-		if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
-		{
-			sound.pause();
-			gameoversound.play();
-			gameovertext.setPosition(300, 300);
-			window.draw(gameovertext);
-			//system("pause");
-		}
+		 if (firzen.getPosition().y > WINDOW_HEIGHT + 1)
+  {
+   gameoversound.setVolume(30.0f);
+   if (havePlayedSound == false)
+   {
+    sound.stop();
+    gameoversound.play();
+   }
+   havePlayedSound = true;
+   gameovertext.setPosition(300, 300);
+   window.draw(gameovertext);
+   //system("pause");
+  }
 		//window.draw(gameovertext);
 		// set the string to display
 		std::ostringstream oss;
