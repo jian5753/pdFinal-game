@@ -52,14 +52,14 @@ int main(void)
 	sf::Text text;
 	text.setFont(font); // font is a sf::Font
 	text.setCharacterSize(50); // in pixels, not points!
-	text.setFillColor(sf::Color::Black);
+	text.setFillColor(sf::Color::White);
 	text.setStyle(sf::Text::Bold);
 	text.setPosition(120, 5);
 
 	sf::Text word;
 	word.setFont(font); // font is a sf::Font
 	word.setCharacterSize(40); // in pixels, not points!
-	word.setFillColor(sf::Color::Black);
+	word.setFillColor(sf::Color::White);
 	word.setStyle(sf::Text::Bold);
 	word.setPosition(13, 10);
 	word.setString("score");
@@ -77,7 +77,7 @@ int main(void)
 
 	/*background image*/
 	Texture backgroundTexture;
-	backgroundTexture.loadFromFile("fighters/background/bgg.jpg");
+	backgroundTexture.loadFromFile("fighters/background/BACKGROUND.jpg");
 
 
 	/*create player firzen*/
