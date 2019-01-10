@@ -79,6 +79,7 @@ int main(void)
 	gameovertext.setStyle(sf::Text::Bold);
 	gameovertext.setString("gameover");
 
+
 	// inside the main loop, between window.clear() and window.display()
 	/*screen display shits*/
 	RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Doodle", Style::Close | Style::Resize);
@@ -259,7 +260,7 @@ int main(void)
 
 		/*set some window shit including view*/
 		if(firzen.getPosition().y > WINDOW_HEIGHT / 2)
-			view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2); 
+		view.setCenter(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2); 
 		else
 		view.setCenter(WINDOW_WIDTH / 2, firzen.getPosition().y);	//need setCenter after calling player.update()
 		window.clear(Color(150,150,150));
@@ -298,7 +299,6 @@ int main(void)
 			havePlayedSound = true;
 			gameovertext.setPosition(300, 300);
 			window.draw(gameovertext);
-			//system("pause");
 		}
 		
 		// set the string to display
