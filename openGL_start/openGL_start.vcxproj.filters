@@ -30,6 +30,9 @@
     <ClCompile Include="src\Platform.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="src\Menu.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myHeaders\Animation.h">
@@ -45,6 +48,21 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="myHeaders\Platform.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="myHeaders\Menu.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Screens.hpp">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cScreen.hpp">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="src\screen_GameMenu.hpp">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="src\screen_Game.hpp">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
